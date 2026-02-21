@@ -12,3 +12,5 @@
 *.toc
 *.blg
 *.bbl
+*.synctex(busy)
+

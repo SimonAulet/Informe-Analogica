@@ -32,12 +32,15 @@ Principalmente se eligió Texas Instruments en los componentes, por ser marca us
   \item \textbf{Componentes genéricos} Resistores, ldr, capacitores, etc. se eligen basandose en disponibilidad de componentes genéricos disponibles en biblioteca de Kicad.
 \end{itemize}
 
-\subsubsection{Elección de clases para las señales}
+\subsubsection{Manejo de señales}
+
+Las señales externas (de sensores, pulsos, etc.) se reciben mediante borneras. Los setpoint se determinan mediante potenciómetos, los cuales estarán claramente indicados en el PCB. Las señales de indicación se colocan en el PCB mediante LEDs señalizados y se envían también al exterior mediante un conector tipo socket hembra.
+
 A conciencia de que no todas las señales se manejan igual, se eligen distintas clases de señales:
 
 \begin{table}[h]
 \centering
-\begin{tabular}{|l|l|p{8cm}|} % Barras verticales y ancho fijo para la última columna
+\begin{tabular}{|l|l|p{8cm}|}
 \hline
 \textbf{Prefijo} & \textbf{Significado} & \textbf{Explicación} \\
 \hline
@@ -52,3 +55,32 @@ $\pm$9VA     & Power clean         & Alimentación de amplificadores \\
 \caption{Descripción de los prefijos de señal.}
 \label{tab:prefijos}
 \end{table}
+
+\subsection{Armado del PCB físico}
+
+En el board principal, todos los componentes se distribuyen de manera que queden lo más juntos posibles. Al comenzar con el ruteo se observa que es necesaria una mucho mayor distanccia entre componentes frente a lo cual se reacomoda todo. Se definen las siguientes secciónes del PCB:
+
+\begin{itemize}
+  \item \textbf{Conectores:} Ubicados en los costados externos
+  \item \textbf{Relés:} Los relés de potencia se dejan lo más separados posibles para evitar interferencia
+  \item \textbf{Circuitería principal:} Principalmente en el centro
+  \item \textbf{Interacción con  usuario:} Sección con los setpoints y leds indicadores. Todo se señaliza
+\end{itemize}
+
+\subsubsection{Ruteo}
+
+Se optó por hacer 6 capas, distribuídas de la siguiente manera:
+
+\begin{itemize}
+    \item \textbf{F.Cu (Capa frontal):} Señales analógicas (las más importantes), con tramos cortos. Esta disposición facilita el debugging y la interpretación de las señales.
+
+    \item \textbf{In1.Cu (Capa interna 1):} Plano de tierra (GND) común para toda la placa, proporcionando una referencia de tierra estable y de baja impedancia.
+
+    \item \textbf{In2.Cu (Capa interna 2):} Vías de alimentación. Se implementaron secciones largas que atraviesan todo el PCB, utilizando colectores gruesos con ramales de grosor según la clase de corriente. Se separa la alimentación sensible (\texttt{power\_clean}) para amplificadores de la alimentación general (\texttt{power}).
+
+    \item \textbf{In3.Cu (Capa interna 3):} Señales de control (\texttt{setpoint}, salidas a un conector que recibe todas las señales de información). Aunque esta capa es menos debuggable, al tratarse de señales de control se puede medir directamente en los pads para entender su origen. La prioridad se mantuvo en las señales analógicas.
+
+    \item \textbf{In4.Cu (Capa interna 4):} Cruces de señales de control y señales de LEDs, optimizando el espacio y minimizando interferencias.
+
+    \item \textbf{B.Cu (Capa posterior):} "Autopistas" de muchas pistas en paralelo, principalmente analógicas, con trazos largos. Se eligió esta capa para poder seguir las señales desde arriba, ya que las vías van de extremo a extremo, permitiendo rastrear todo el recorrido de las señales.
+\end{itemize}
