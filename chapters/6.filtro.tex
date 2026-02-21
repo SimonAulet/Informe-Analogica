@@ -150,19 +150,23 @@ Decidimos probar el filtrado con una senoidal modulada en AM mediante un generad
 El osciloscopio muestra lo que esperábamos, una señal filtrada(amarillo), un poco desfasada en fase y también atenuada en magnitud, la atenuación corresponde a aproximadamente 7 decibeles que es la transición de la frecuencia de corte.
 \subsubsection*{Armónicos}
 Empleamos el osciloscopio para analizar las componentes frecuenciales de la señal periódica en la señal modulada, a modo de verificar que efectivamente introdujimos unas componentes de alta frecuencia.
+
+\begin{minipage}{0.48\linewidth}
 \begin{figure}[H]
-  \includegraphics[max width=0.7\linewidth]{graphics/armo.png}
+  \includegraphics[max width=\linewidth]{graphics/armo.png}
   \caption{Armónicos}%
   \label{fig:Armónicos}
 \end{figure}
-
-
+\end{minipage}
+\begin{minipage}{0.48\linewidth}
 \begin{figure}[H]
-  \includegraphics[max width=0.5\linewidth]{graphics/filter.png}
+  \includegraphics[max width=\linewidth]{graphics/filter.png}
   \caption{Modulación AM 2}%
   \label{fig:Modulación AM 2}
 \end{figure}
-Esta segunda figura es una prueba con una entrada modulada a una frecuencia un poco mas baja.
+\end{minipage}
+
+La segunda figura es una prueba con una entrada modulada a una frecuencia un poco mas baja.
 
 \subsubsection*{Desfasaje}
 Ingresamos al sistema con una señal sin modular casi a la frecuencia de corte para visualizar la atenuacion en la magnitud y el cambio de fase correspondiente.

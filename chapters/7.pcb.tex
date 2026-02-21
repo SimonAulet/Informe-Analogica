@@ -13,6 +13,8 @@ Se trata de dos proyectos distintos:
 Se optó por hacer un sheet principal con bloques, cada uno de los cuales representa un subsistema. En el esquemático principal se pueden ver las señales entrando y saliendo de cada bloque.
 De esta manera, se consigue un sistema entendible y mantenible.
 
+Todos los diseños fueron evaluados con el ERC a fondo eliminandose la totalidad de los errores del diseño.
+
 \begin{figure}[H]
   \includegraphics[max width=0.99\linewidth]{graphics/0.root.pdf}
   \caption{Diagrama de bloques del PCB}%
@@ -27,7 +29,7 @@ Principalmente se eligió Texas Instruments en los componentes, por ser marca us
 \begin{itemize}
   \item \textbf{LM35:} Como sensor de temperatura se elige el LM35 de Texas instruments. El encapsulado seleccionado es TO-220, el cual se puede atornillar a las baterías para la medición de baja temperatura
   \item \textbf{LM358B:} Amplificador operacional principal. También de TI, versión SMD para montaje compacto en el main board. Se colocan capacitores de $0.1\mu \text{F}$ como indica el datasheet, pegados a la alimentación
-  \item \textbf{Mosfet:} En este caso se optó por el CSD17577Q5A de Texas Instruments por ser el más pequeño que cumple con los requerimientos. Esta elección trajo problemas ya que la separación de los pines generó conflictos con el ancho de pista definido para las señales que maneja
+  \item \textbf{Mosfet:} En este caso se optó por el CSD17577Q5A de Texas Instruments por ser el más pequeño que cumple con los requerimientos. Esta elección trajo problemas ya que la escasa separación entre los pines generó conflictos con el ancho de pista definido
   \item \textbf{RT314009:} Este componente se eligió como Relay para las baterías por estar disponible en la biblioteca de Kicad y manejar altos amperajes. Texas instruments no tenía alternativas
   \item \textbf{Componentes genéricos} Resistores, ldr, capacitores, etc. se eligen basandose en disponibilidad de componentes genéricos disponibles en biblioteca de Kicad.
 \end{itemize}
@@ -47,7 +49,7 @@ A conciencia de que no todas las señales se manejan igual, se eligen distintas 
 A\_      & Analógicas          & Sensibles a ruido, se intenta reducir los saltos entre capas \\
 F\_      & Feedback            & Críticas, se intenta minimizar su longitud \\
 L\_      & LEDs del main board & Poco importantes / sensibles, solo indicadoras \\
-C\_      & Control             & Generalmente on/off o set\_point \\
+C\_      & Control             & Generalmente on / off o set\_point \\
 S\_      & Power signal        & Señal de potencia \\
 $\pm$9VA     & Power clean         & Alimentación de amplificadores \\
 \hline
@@ -60,6 +62,7 @@ $\pm$9VA     & Power clean         & Alimentación de amplificadores \\
 
 En el board principal, todos los componentes se distribuyen de manera que queden lo más juntos posibles. Al comenzar con el ruteo se observa que es necesaria una mucho mayor distanccia entre componentes frente a lo cual se reacomoda todo. Se definen las siguientes secciónes del PCB:
 
+\begin{minipage}{0.65\linewidth}
 \begin{itemize}
   \item \textbf{Conectores:} Ubicados en los costados externos
   \item \textbf{Relés:} Los relés de potencia se dejan lo más separados posibles para evitar interferencia
@@ -67,20 +70,144 @@ En el board principal, todos los componentes se distribuyen de manera que queden
   \item \textbf{Interacción con  usuario:} Sección con los setpoints y leds indicadores. Todo se señaliza
 \end{itemize}
 
+\end{minipage}
+\begin{minipage}{0.34\linewidth}
+\begin{figure}[H]
+  \includegraphics[max width=\linewidth]{graphics/7.1.pcb_zones_annotated.png}
+  \caption{Zonas definidas en el PCB}%
+  \label{fig:PCB Zones}
+\end{figure}
+\end{minipage}
+
 \subsubsection{Ruteo}
 
 Se optó por hacer 6 capas, distribuídas de la siguiente manera:
 
 \begin{itemize}
     \item \textbf{F.Cu (Capa frontal):} Señales analógicas (las más importantes), con tramos cortos. Esta disposición facilita el debugging y la interpretación de las señales.
-
     \item \textbf{In1.Cu (Capa interna 1):} Plano de tierra (GND) común para toda la placa, proporcionando una referencia de tierra estable y de baja impedancia.
-
     \item \textbf{In2.Cu (Capa interna 2):} Vías de alimentación. Se implementaron secciones largas que atraviesan todo el PCB, utilizando colectores gruesos con ramales de grosor según la clase de corriente. Se separa la alimentación sensible (\texttt{power\_clean}) para amplificadores de la alimentación general (\texttt{power}).
-
     \item \textbf{In3.Cu (Capa interna 3):} Señales de control (\texttt{setpoint}, salidas a un conector que recibe todas las señales de información). Aunque esta capa es menos debuggable, al tratarse de señales de control se puede medir directamente en los pads para entender su origen. La prioridad se mantuvo en las señales analógicas.
-
     \item \textbf{In4.Cu (Capa interna 4):} Cruces de señales de control y señales de LEDs, optimizando el espacio y minimizando interferencias.
-
-    \item \textbf{B.Cu (Capa posterior):} "Autopistas" de muchas pistas en paralelo, principalmente analógicas, con trazos largos. Se eligió esta capa para poder seguir las señales desde arriba, ya que las vías van de extremo a extremo, permitiendo rastrear todo el recorrido de las señales.
+    \item \textbf{B.Cu (Capa posterior):} Autopistas de muchas pistas en paralelo, principalmente analógicas, con trazos largos. Se eligió esta capa para poder seguir las señales desde arriba, ya que las vías van de extremo a extremo, permitiendo rastrear todo el recorrido de las señales.
 \end{itemize}
+
+\begin{minipage}{0.33\linewidth}
+\begin{figure}[H]
+  \includegraphics[max width=\linewidth]{graphics/7.ruteo-1.pdf}
+  \caption{F.Cu: Señales analógicas y de Feedback}%
+  \label{fig:F.Cu}
+\end{figure}
+\end{minipage}
+\begin{minipage}{0.33\linewidth}
+\begin{figure}[H]
+  \includegraphics[max width=\linewidth]{graphics/7.ruteo-2.pdf}
+  \caption{In1.Cu: Plano GND común a toda la placa}%
+  \label{fig:In1.Cu}
+\end{figure}
+\end{minipage}
+\begin{minipage}{0.33\linewidth}
+\begin{figure}[H]
+  \includegraphics[max width=\linewidth]{graphics/7.ruteo-3.pdf}
+  \caption{In2.Cu: Vías de alimentación}%
+  \label{fig:In2.Cu}
+\end{figure}
+\end{minipage}
+
+\begin{minipage}{0.33\linewidth}
+\begin{figure}[H]
+  \includegraphics[max width=\linewidth]{graphics/7.ruteo-4.pdf}
+  \caption{In3.Cu: Señales de control}%
+  \label{fig:In3.Cu}
+\end{figure}
+\end{minipage}
+\begin{minipage}{0.33\linewidth}
+\begin{figure}[H]
+  \includegraphics[max width=\linewidth]{graphics/7.ruteo-5.pdf}
+  \caption{In4.Cu: Cruces de control y LEDs}%
+  \label{fig:In4.Cu}
+\end{figure}
+\end{minipage}
+\begin{minipage}{0.33\linewidth}
+\begin{figure}[H]
+  \includegraphics[max width=\linewidth]{graphics/7.ruteo-6.pdf}
+  \caption{B.Cu: Autopistas analógicas}%
+  \label{fig:B.Cu}
+\end{figure}
+\end{minipage}
+
+\newpage
+
+Se inició haciendo las conexiónes de las señales de GND, las cuales van directo al plano tierra. Acto seguido se conectaron las líneas de Feedback y analógicas intentando reducir al mínimo necesario los cruces y saltos entre capas. Finalmente, se suman las de control y el resto.
+\subsubsection{Ancho de pistas}
+El ancho de pistas fué definido mediante netclasses de la siguiente manera:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+Name & Clearance & TrackWidth & Via Size & Via Hole \\
+\hline
+GND & 0.25 mm & 0.6 mm & - & - \\
+Digital & 0.3 mm & 0.3 mm & 0.8 mm & 0.4 mm \\
+pwr signal & 0.2 mm & 0.4 mm & 1 mm & 0.6 mm \\
+Power clean & 0.3 mm & 0.6 mm & 1 mm & 0.6 mm \\
+Feedback & 0.4 mm & 0.3 mm & 0.8 mm & 0.4 mm \\
+LED & 0.2 mm & 0.4 mm & 0.8 mm & 0.4 mm \\
+Control & 0.2 mm & 0.3 mm & 0.3 mm & 0.1 mm \\
+Power raw & 0.4 mm & 2 mm & 1 mm & 0.5 mm \\
+Power & 0.4 mm & 0.8 mm & 0.8 mm & 0.6 mm \\
+Analog & 0.2 mm & 0.4 mm & 0.8 mm & 0.4 mm \\
+Default & 0.2 mm & 0.2 mm & 0.6 mm & 0.3 mm \\
+\hline
+\end{tabular}
+\caption{Net Classes}
+\label{tab:netclasses}
+\end{table}
+
+En algunos casos hubo que hacer que el ultimo tramo de una pista, por entrar a un dispositivo con pines muy juntos, se deba angostar un poco. En esos casos, el ancho de la pista era el suficiente para la corriente transportada.
+
+Se puede apreciar en los tamaños que, tratandose de un circuito prácticamente 100\% analógico, se usan anchos considerables. Power Clean es alimentación cuidada que alimenta integrados.
+
+\subsubsection{Silkscreen y consideraciónes de fabricación}
+
+Se señalizaron lo mejor posible las áreas significativas del PCB. Cada componente tiene su nombre así como las conexiónes de cada bornera. Al terminar el PCB se observó que previa definición de tramaños de vías y pistas, se debe verificar con el fabricante cuáles son las disponibles.
+
+Se corrió el DRC (Design Rules Checker) para eliminar todo tipo de error y reducir al mínimo posible la complejidad de fabricación
+
+\subsection{Sensores externos}
+
+Para los sensores externos se usó la misma lógica que en el PCB principal, con la salvedad que, al ser circuitos simples, se usan solo dos capas (F.Cu y B.Cu)
+\subsubsection{Esquemático}
+\begin{figure}[H]
+  \includegraphics[max width=\linewidth]{graphics/7.2.sensors.pdf}
+  \caption{Esquemático sensores externos}%
+  \label{fig:Esquemático sensores}
+\end{figure}
+
+Todo el esquemático con los módulos externos se implementa en una sola sheet. Para evitar problemas con el ERC se generan distintas redes GND en cada esquemático
+
+\subsubsection{PCB Físico}
+\begin{figure}[H]
+  \includegraphics[max width=\linewidth]{graphics/7.3.sensors_board.png}
+  \caption{Vista del PCB con los sensores y actuadores}%
+  \label{fig:PCB Sensores}
+\end{figure}
+
+Notese en el Silkscreen la indicación de cada módulo para su correcta ubicación
+
+\subsection{Aprendizajes al implementar el PCB}
+
+La implementación del PCB principal y los módulos de sensores externos dejó varias lecciones valiosas que se resumen a continuación:
+
+\subsubsection{Planificación y organización}
+La planificación temprana de redes por categoría demostró ser crucial incluso durante el posicionamiento inicial de componentes. Ubicar los elementos por zonas funcionales resultó más importante de lo anticipado, facilitando tanto el ruteo como la depuración posterior. Una estrategia que habría mejorado significativamente el proceso es posicionar primero los conectores y luego los integrados de acuerdo a ellos, en lugar de hacerlo al revés.
+
+\subsubsection{Estrategias de ruteo}
+Para el ruteo, se aprendió que es más eficiente comenzar por las zonas más densas. Las autopistas (tramos con muchas pistas en paralelo) deben ubicarse en áreas poco pobladas para permitir el uso de vías. Un hallazgo importante fue que las autopistas no pueden tener vías paralelas en la capa superior, ya que esto imposibilita los cruces. En retrospectiva, una estrategia de capas ortogonales (una capa con trazos verticales y otra con horizontales) podría haber sido más efectiva.
+
+\subsubsection{Consideraciones técnicas}
+El uso de la capa inferior (B.Cu) para los cruces demostró ser una excelente práctica, facilitando enormemente el seguimiento de trazos y la depuración. En cuanto a la selección de componentes, se aprendió que es fundamental considerar el tamaño de los pads: componentes con pads muy pequeños limitan el grosor de pistas que se pueden conectar a ellos. Esta consideración previa ayuda a evitar excepciones en las directivas de diseño.
+
+\subsubsection{Preparación para fabricación}
+Finalmente, una lección clave fue la importancia de definir desde el inicio las restricciones de fabricación. Antes de comenzar cualquier diseño, es esencial conocer dónde se va a fabricar el PCB y configurar las constraints adecuadas (mínimo ancho de pista, separación entre pistas, tamaño de vías, etc.) para evitar rediseños costosos.
