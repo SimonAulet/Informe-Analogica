@@ -1,0 +1,176 @@
+\section{Filtro Activo}
+
+\subsection*{Objetivo}
+Diseñar, construir y validar experimentalmente un filtro activo pasabajos de segundo orden utilizando un amplificador operacional, con el objetivo de atenuar ruido de alta frecuencia en señales provenientes de sensores satelitales (temperatura, iluminación y corriente). 
+Se comparó la frecuencia de corte teórica con la medida en el experimento y se analizó el impacto en la calidad de la señal.
+
+\subsection*{Implementacion}
+Se utilizó la topología Sallen-Key, ampliamente utilizada para la implementación de filtros activos (op amp) de segundo orden.
+El orden dos del sistema se debe a que tenemos dos componentes almacenadores de energía (capacitores $C_1$ y $C_2$), lo que introduce dos polos en la función de transferencia.
+La imagen a continuación describe como es la topología en cuestión.
+
+\begin{figure}[H]
+  \includegraphics[max width=0.9\linewidth]{graphics/sallenKey.png}
+  \caption{Topología Sallen Key}%
+  \label{fig:Topología Sallen Key}
+\end{figure}
+
+En este caso, para obtener los valores de los componentes decidimos despejarlos a partir de la función transferencia:
+\[
+H(s)=\frac{K \omega_0^2}{s^2 + \frac{\omega_0}{Q}s + \omega_0^2}
+\]
+
+donde:
+\[
+\omega_0 = \frac{1}{\sqrt{R_1 R_2 C_1 C_2}}
+\]
+
+y \(Q\) es el factor de calidad del filtro.
+
+Para simplificar el diseño elegimos una configuración simétrica:
+
+\[
+R_1 = R_2
+\]
+\[
+C_1 = C_2
+\]
+
+lo que nos permite definir una única frecuencia de corte:
+
+\[
+\omega_0 = \frac{1}{RC}
+\]
+
+Mediante el seteo de características que necesitábamos, definimos una frecuencia de corte de aproximadamente:
+\[
+f_c = 100 \ \text{Hz}
+\]
+
+lo que equivale a:
+
+\[
+\omega_0 = 2\pi f_c \approx 628 \ \text{rad/s}
+\]
+Con los valores seleccionados:
+
+\[
+R = 15.92\,k\Omega, \quad C = 100\,nF
+\]
+
+se verifica:
+
+\[
+\omega_0 = \frac{1}{RC} \approx 628 \,\text{rad/s}
+\]
+
+Buscamos además una ganancia cercana a la unidad en banda pasante.
+Por otro lado, la ganancia del amplificador operacional en configuración no inversora está dada por:
+\[
+K = 1 + \frac{R_4}{R_3}
+\]
+
+\subsection*{Simulación}
+A continuación, realizamos la simulación de un script en python con la librería \texttt{python-control} para poder visualizar el diagrama de Bode en magnitud y fase a partir de la funcion transferencia del circuito:
+
+\[
+H(s)= \frac{1.01}{2.534 \times 10^{-6}s^{2} + 0.001368s + 1}
+\]
+\\
+Estimación de parámetros:\\
+\[
+ R_{1}=mR 
+ \]
+ \[
+  R_{2}=\frac{R}{m} 
+ \]
+ \[
+ C_{1}=nC 
+  \]
+  \[
+ C_{2}=C/n
+  \]
+ \[
+ w_{0}=2*\pi*f_{0}
+  \]
+  Investigando al respecto, decidimos que lo más conveniente era definir una única R y una única C para asi poder despejar una única frecuencia de corte. Para poder completar los valores de los esquemáticos escalamos las resistencias y capacitores por las constantes 'm' y 'n' respectivamente.\\
+  Probamos valores de resistencias y capacitores que tengan sentido con los materiales a disposición, y, para la magnitud unitaria del Bode, forzamos a que la ganancia en la función transferencia sea 1.01. Dicha ganancia fue obtenida del mismo esquemático en función a las ressitencias:\\
+   \[
+K=\frac{R_{3}+R_{4}}{R_{3}}=1.01
+  \]
+
+
+\begin{lstlisting}[
+    language=python,caption={Simulacion filtro},name=simulacion filtro,label=lst:simulacion filtro
+  ]
+import control as ct
+import sympy as sp
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib qt6
+
+R1=15.92*(10**3)
+R2=15.92*(10**3)
+R3=100*(10**3)
+R4=1*(10**3)
+C1=100*(10**(-9))
+C2=100*(10**(-9))
+
+K=(R3+R4)/R3
+
+num=[0,0,K]
+den=[R1*R2*C1*C2,R1*C1+R2*C1+R1*C2*(1-K),1]
+
+H=ct.tf(num, den)
+
+plt.figure()
+ct.bode_plot(H,dB=True)
+
+plt.show()
+    \end{lstlisting}\\
+    
+\begin{figure}[H]
+  \includegraphics[max width=1\linewidth]{graphics/bodeFilter.png}
+  \caption{Bode filtro activo}%
+  \label{fig:Bode filtro activo}
+\end{figure}
+De la simulación obtuvimos el Bode en fase y  en magnitud, de los cuales podemos ver que se cumple con el criterio de corte a 200rad/s  y además se aprecia que a una  superior a 100 rad/s el filtro desfasará nuestra señal de salida respecto a la de entrada.
+\subsection*{Pruebas de laboratorio}
+Sometimos al filtro a diferentes entradas para poder validar y corroborar su comportamiento descrito por los diagramas de Bode.\\
+
+
+
+\subsubsection*{Modulación AM}
+Decidimos probar el filtrado con una senoidal modulada en AM mediante un generador de funciones, dicha portadora contenía altas frecuencias y la envolvente bajas frecuencias para corroborar su debido funcionamiento.
+\begin{figure}[H]
+  \includegraphics[max width=0.5\linewidth]{graphics/filter1.png}
+  \caption{Modulación AM 1}%
+  \label{fig:Modulación AM 1}
+\end{figure}
+El osciloscopio muestra lo que esperábamos, una señal filtrada(amarillo), un poco desfasada en fase y también atenuada en magnitud, la atenuación corresponde a aproximadamente 7 decibeles que es la transición de la frecuencia de corte.
+\subsubsection*{Armónicos}
+Empleamos el osciloscopio para analizar las componentes frecuenciales de la señal periódica en la señal modulada, a modo de verificar que efectivamente introdujimos unas componentes de alta frecuencia.
+\begin{figure}[H]
+  \includegraphics[max width=0.7\linewidth]{graphics/armo.png}
+  \caption{Armónicos}%
+  \label{fig:Armónicos}
+\end{figure}
+
+
+\begin{figure}[H]
+  \includegraphics[max width=0.5\linewidth]{graphics/filter.png}
+  \caption{Modulación AM 2}%
+  \label{fig:Modulación AM 2}
+\end{figure}
+Esta segunda figura es una prueba con una entrada modulada a una frecuencia un poco mas baja.\\ 
+
+\subsubsection*{Desfasaje}
+Ingresamos al sistema con una señal sin modular casi a la frecuencia de corte para visualizar la atenuacion en la magnitud y el cambio de fase correspondiente.
+\begin{figure}[H]
+  \includegraphics[max width=0.5\linewidth]{graphics/check.png}
+  \caption{Desfasaje}%
+  \label{fig:desfasaje}
+\end{figure}
+
+
+

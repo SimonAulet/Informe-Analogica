@@ -1,0 +1,156 @@
+\section{Control térmico}
+\section*{Objetivo}
+\section*{Implementación}
+
+\subsection*{Simulaciónes}
+
+\subsubsection*{Planteo matemático}
+Para las simulaciónes se parte de la ecuación de schmitt trigger:
+
+\begin{align*}
+V_{in}L  &= \frac{R_1}{R_1 + R_2} \left(V_{OL} - V_{ref}\right) + V_{ref} \\
+V_{inH}  &= \frac{R_1}{R_1 + R_2}\left(V_{OH} - V_{ref} + V_{ref}\right) \\
+H        &= \frac{R_1}{R_1 + R_2} \left(V_{OH} - V_{OL}\right)
+\end{align*}
+
+Para elegir los valores, se simula el sistema de ecuaciónes en Python
+
+\begin{lstlisting}[
+    language=python,caption={Simulacion histeresis},name=simulacion histeresis,label=lst:simulacion histeresis
+  ]
+
+    from sympy import symbols, Eq, solve
+    import matplotlib.pyplot as plt
+
+    #Generacion de simbolos
+    VinL, VinH, H, R1, R2, VOL, VOH, Vref = symbols('VinL VinH H R1 R2 VOL VOH Vref')
+
+    #Implementacion de ecuaciones
+    eq_min = Eq(VinL, R1/(R1+R2) * (VOL - Vref) + Vref)
+    eq_max = Eq(VinH, R1/(R1+R2) * (VOH - Vref) + Vref)
+    eq_H   = Eq(H,    R1/(R1+R2) * (VOH - VOL))
+
+    #Se sobreescriben los valores conocidos dejandose 3 incognitas
+    VinL_val = VinL
+    VinH_val = VinH
+    H_val    = H
+    R1_val   = 5e3
+    R2_val   = 100e3
+    VOL_val  = 0
+    VOH_val  = 9
+    Vref_val = 5
+
+    #Se resuelve el circuito para v superior, inferior e histeresis
+    sol = solve(
+        (eq_min.subs({R1: R1_val, R2:R2_val, VOL:VOL_val, Vref:Vref_val}),
+         eq_max.subs({R1: R1_val, R2:R2_val, VOH:VOH_val, Vref:Vref_val}),
+         eq_H.subs({  R1: R1_val, R2:R2_val, VOH:VOH_val, VOL:VOL_val})),
+        (VinL, VinH, H)
+    )
+    \end{lstlisting}
+
+
+\begin{minipage}{0.5\textwidth}
+    \begin{figure}[H]
+  \includegraphics[max width=0.9\linewidth]{graphics/1.6.hysteresis_calculations.png}
+  \caption{Ploteo de límites para histéresis}%
+  \label{fig:plot-histeresis}
+\end{figure}
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+    El código nos determina límites de voltaje para encendido y apagado ($V_{in}$) de la salida del amplificador, así como los valores superiores e inferior de voltaje que son $VCC$ y $0$ respectivamente. El ancho resulta en $430mV$
+\end{minipage}
+
+\subsubsection*{Simulación en LTSPice}
+A partir de esto, se realizan las simulacióne en LTSpice. No del circuito final, si no de los tres casos posibles de funcionamiento del schmitt trigger:
+\begin{itemize}
+    \item Histeresis con inversión
+    \item Histéresis sin inversión
+    \item Comparador sin histéresis
+\end{itemize}
+
+El circuito implementado en LTSpice es el siguiente:
+
+\begin{figure}[H]
+  \includegraphics[max width=0.9\linewidth]{graphics/1.1.circuit.png}
+  \caption{Circuito implementado en LTSpice}%
+  \label{fig:Implementación en LTSpice de Schmitt Trigger}
+\end{figure}
+Se puede apreciar cómo se hacen 3 circuitos para cada uno de los casos detallados más arriba
+\subsubsection*{Resultados simulación}
+
+A continuación, se muestran los resultados de cada simulación realizada. Las primeras tres imágenes muestran la forma de onda de los 3 casos medidos.
+
+\begin{figure}[H]
+  \includegraphics[max width=0.9\linewidth]{graphics/1.2.inverting_schmitt.png}
+  \caption{Salida de inverting schmitt trigger}%
+  \label{fig:Schmitt Trigger inversor}
+\end{figure}
+
+\begin{figure}[H]
+  \includegraphics[max width=0.9\linewidth]{graphics/1.3.non-inverting_schmitt.png}
+  \caption{Salida de non-inverting schmitt trigger}%
+  \label{fig:Schmitt Trigger no-inversor}
+\end{figure}
+
+\begin{figure}[H]
+  \includegraphics[max width=0.9\linewidth]{graphics/1.4.non-hysteretic_comparator.png}
+  \caption{Salida sin histéresis}%
+  \label{fig:Salida no Schmitt Trigger}
+\end{figure}
+
+Finalmente, se incluye una prueba de la amplitud de la histéresis para verificar que la simulación concuerda con los calculos teóricos
+
+\begin{figure}[H]
+  \includegraphics[max width=0.9\linewidth]{graphics/1.5.hysteresis_characteristics.png}
+  \caption{Medición características de la histéresis}%
+  \label{fig:caracteristicas histeresis}
+\end{figure}
+Se usan marcadores para determinar el ancho de la histéresis $(H)$. Ese valor se resalta en azúl en la ventana de marcadores. Se puede apreciar que da $425mV$, totalmente en línea con lo simulado en Python
+
+\subsection*{Análisis y consideraciones de diseño}
+El ancho de histéresis obtenido fue aproximadamente $H \approx 430\,mV$ en la entrada del comparador. 
+Dado que el sensor LM35 posee una sensibilidad de $10\,mV/^\circ C$ y la etapa amplificadora tiene una ganancia de 5, esto implica que el ancho real de histéresis en temperatura es:
+
+\[
+\Delta T = \frac{H}{5 \cdot 10\,mV/^\circ C} \approx 8.6^\circ C
+\]
+
+Este valor resulta adecuado para evitar conmutaciones erráticas debidas a pequeñas fluctuaciones o ruido cercano al umbral.
+
+Por otro lado, en la implementación práctica deben considerarse tolerancias de resistencias y no idealidades del LM358, como tensión de saturación no perfectamente rail-to-rail y pequeño offset de entrada. 
+Estas variaciones pueden generar leves diferencias respecto a los valores teóricos, aunque no afectan demasiado el funcionamiento general del sistema.
+
+En conjunto, el diseño presenta un comportamiento coherente con el análisis teórico, la simulación y la práctica experimental.
+
+\subsection*{Implementación en PCB}
+\begin{figure}[H]
+  \includegraphics[max width=0.99\linewidth]{graphics/1.schematic.pdf}
+  \caption{Esquemático}%
+  \label{fig:Esquematico control térmico}
+\end{figure}
+
+Para la implementación en el PCB se diseñan 2 bloques diferentes correspondientes a dos laboratorios.
+Ambos bloques encienden una señal de control en el board principal y envían una señal de control a la salida.
+High temp alert system envía señal de control cuando la temperatura está por encima del valor establecido y low temp heater control hace lo inverso.
+
+\vspace{6pt}
+\begin{minipage}{0.3\textwidth}
+\flushleft{
+El stetpoint de temperatura se establece mediante potenciómetros analógicos ubicados en el main board.
+En la figura se muestra el sector del PCB donde se ubican los potenciómetros para setear high y low temp respectivamente más los LED indicadores.}
+\end{minipage}%
+\begin{minipage}{0.5\textwidth}
+\begin{figure}[H]
+  \includegraphics[max width=0.99\linewidth]{graphics/1.0.pcb_control.png}
+  \caption{Controles manuales en PCB}%
+  \label{fig:control manual en PCB}
+\end{figure}
+\end{minipage}
+
+\subsection*{Evaluación de la etapa de control térmico}
+
+La etapa de control térmico permitió validar el funcionamiento del sistema desde el sensor hasta la señal de salida. 
+El análisis teórico de los umbrales y del ancho de histéresis mostró coherencia con las simulaciones realizadas, y el armado del modelo confirmó un comportamiento estable del comparador ante variaciones próximas al punto de disparo.
+
+La incorporación de histéresis resultó fundamental para evitar oscilaciones no deseadas, garantizando una conmutación limpia y predecible en condiciones cercanas al umbral.

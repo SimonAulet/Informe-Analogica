@@ -1,0 +1,73 @@
+\section{Verificación despliegue}
+\subsection*{Objetivo}
+
+Hacer un sistema de verificación analógica de despliegue exitoso de paneles solares.
+
+\subsection*{Implementación}
+
+Para verificar el correcto despliegue, se comparan dos señales: La señal de selección A\_PANEL\_OPEN\/CLOSE\_LATCH\_I con la señal de sensor A\_PANEL\_OPEN\/CLOSE\_SENSOR\_I.
+Al haber un cambio en la señal de control de selección se dispara un timer. Si la señal de selección (latcheada) tiene una diferencia con la señal de sensor durante un tiempo mayor al establecido con el timer 555, se asume un error y se envía señal de alarma. Si las señales se igualan antes que el timer llegue a su límite, se asume correcto funcoinamiento.
+A cotinuación se muestra el esquemático con cada bloque:
+\begin{figure}[H]
+  \includegraphics[max width=0.99\linewidth]{graphics/4.schematic.pdf}
+  \caption{Esquematico completo}%
+  \label{fig:esquematico verificación}
+\end{figure}
+
+\begin{itemize}
+  \item \textbf{Signal-to-pulse trigger:} La función de este bloque es convertir la señal continua de selección en un pulso invertido para activar el 555 ya que éste necesita pulsos para activarse. Para lograrlo, se usa un capacitor el cual, al llegar una señal contínua al comparador, genera una diferencia temporal manteniendose la entrada negativa a mayor voltaje que la positiva. Esto hace que el opamp tenga una salida baja. Luego, una vez el capacitor se estabiliza la salida vuelve a estado alto. En las simulaciónes se puede ver este funcionamiento. El sistema se duplica para poder activar el timer con ambas entradas; apertura y cierre de paneles.
+  \item\textbf{555 timing:} Timer 555 configurado en modo monoestable con una duración de 10 segundos approx.
+  \item\textbf{Reset signal mux:} La señal de reset es tomada de los sensores. Cuando un sensor se activa (el panel está en posición) se activa el reset. Cuando se selecciona apertura paneles, el mux deja pasar la señal del sensor de apertura. De esta manera, cuando el panel está totalmente abierto, el sensor de apertura se activa y a su vez activa el reset. Como el reset es ativo bajo, esta señal se invierte en el mismo mux con el transistor $Q601$. Idem para cierre.
+  \item\textbf{Alarm set logic:} Activa la alarma cuando la salida $Q$ del timer está en bajo (activa) y el reset no está activado. Esto indica que se superó el tiempo de espera para apertura. Si el sensor indica que el panel llegó a su posición, el reset se activa (bajo) y el comparador se mantiene en cero. Si el timer se agota antes que el sensor llegue a la posición, el comparador da salida en alto activando la alarma.
+  \item\textbf{Panel status logic:} Indicador que informa el estado de los paneles. Cuando el latch seleccióna apertura y el sensor indica que está abierto, sale la señal de panel abierto. Lo mismo para cerrado
+\end{itemize}
+
+\subsubsection*{Simulaciónes}
+Se arma el circuito en LTSpice para una  sola señal como se muestra a continuación.
+
+\begin{figure}[H]
+  \includegraphics[max width=0.99\linewidth]{graphics/4.1.circuit.png}
+  \caption{Circuito completo en LTSpice}%
+  \label{fig:Simulacion verificacion}
+\end{figure}
+
+En la primer simulación se puede ver el latch-to-pulse funcionando. Inicialmente, la señal continua (verde) esta en estado bajo y pasa a alto, generandose un pulso (invertido) en la salida (azul). Luego a los 6 segundos la señal continua pasa a estado bajo sin que se altere la salida. A los 8 segundos la continua pasa a estado alto, generandose otro pulso negativo en la salida.
+
+\begin{figure}[H]
+  \includegraphics[max width=0.99\linewidth]{graphics/4.3.latch-to-pulse(annotated).png}
+  \caption{Forma de onda de entrada y salida del signal-to-pulse}%
+  \label{fig:signal-to-pulse simulation}
+\end{figure}
+
+Luego pasamos a la salida del 555. La waveform roja es la salida (activo bajo). Al inicio se dispara el 555 con un pulso de trigger (azul) y a los 6 segundos se activa el reset. Esto genera una salida activa pero no se dispara la alarma por el bloque alarm-logic explicado más arriba.\\
+Luego, a los 5 segundos, se vuelve a activar el timmer simulando otro cambio. Esta la señal de reset no llega, frente a lo cual, en los 19 segundos, se activa la salida. La lógica de la alarma hará que, al activarse la salida del 555 y no el reset del sensor, se dispare la alarma.
+
+\begin{figure}[H]
+  \includegraphics[max width=0.99\linewidth]{graphics/4.5.out(annotated).png}
+  \caption{Forma de onda de entrada, reset y salida del 555}%
+  \label{fig:555 simulation}
+\end{figure}
+
+Finalmente, está la lógica de la alarma, en la cual se hacen dos pruebas:
+\begin{itemize}
+    \item A los 6 segundos, la salida y reset están bajos (activos) frente a lo cual la alarma no se activa
+    \item A los 19 segundos, Trigger está bajo y reset alto, lo cual activa la alarma.
+\end{itemize}
+Esta waveform está sincronizada con la anterior (es la misma simulación), con lo cual se puede ver el funcionamiento completo.
+
+\begin{figure}[H]
+  \includegraphics[max width=0.99\linewidth]{graphics/4.5.out(annotated).png}
+  \caption{Forma de onda de lógica de alarma}%
+  \label{fig:alarm-logic simulation}
+\end{figure}
+
+\subsection*{Principio de funcionamiento}
+Lo que hace este sistema es implementar una verificación temporal de coherencia entre la orden de despliegue y la respuesta física del mecanismo. 
+
+Cuando se emite una señal de apertura o cierre, el bloque signal-to-pulse genera un pulso que dispara el temporizador 555 en modo monoestable. A partir de ese momento empieza una ventana temporal durante la cual se espera que el sensor indique la posición alcanzada.
+
+Si el sensor confirma la posición antes de que el temporizador expire, el reset interrumpe el conteo y el sistema considera la operación exitosa. Caso contrario, al agotarse el tiempo establecido, la lógica de alarma interpreta la diferencia entre orden y estado como una falla y activa la señal de error.
+
+Esto nos permite detectar atascamientos mecánicos, fallas eléctricas o 
+situaciones en las cuales el panel no alcanza la posición esperada dentro 
+del tiempo previsto.

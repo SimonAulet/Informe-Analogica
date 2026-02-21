@@ -1,0 +1,63 @@
+\section{Orientación solar}
+\subsection*{Objetivo}
+
+Determinar la orientación del satélite y el evento de un eclipse mediante la luz recibida en sensores luminicos, activando salidas de control correspondientes
+
+\subsection*{Implementación}
+4 sensores LDR se ubican en los puntos cardinales del satélite. Cada sensor es un mini PCB individual que se conecta por cables al board principal. Potenciómetros en este board permiten calibrar la sensiblidad de luz para activar la salida.
+
+\subsubsection*{Simulación}
+Siendo un circuito muy simple, se realiza unicamente una simulación en la cual se hace variar una resistencia (simulando el LDR) cuyo valor depende de una fuente de voltaje $R = V(VR)\cdot 1M\Omega$. El circuito se muestra a continuación
+
+\begin{figure}[H]
+  \includegraphics[max width=0.9\linewidth]{graphics/2.1.circuit.jpeg}
+  \caption{Simulación del LDR}%
+  \label{fig:simulacion LDR}
+\end{figure}
+
+La salida es un simple comparador:
+\begin{figure}[H]
+  \includegraphics[max width=0.9\linewidth]{graphics/2.3.waveform(annotated).png}
+  \caption{Salida del LDR}%
+  \label{fig:salida LDR}
+\end{figure}
+
+Para el esquemático, se usa el mismo circuito comparador 4 veces. Notese que se tienen 4 LEDs, 4 Setpoints y una salida de Eclipse. La detección de eclipse se ajusta mediante un setpoint que se setea al punto en el cual los 4 sensores están apagados (las cuatro salidas en alto)
+\begin{figure}[H]
+  \includegraphics[max width=0.9\linewidth]{graphics/2.schematic.pdf}
+  \caption{Esquematico de detección de orientacion}%
+  \label{fig:esquematico orientacion}
+\end{figure}
+
+\subsection*{Consideraciones de funcionamiento}
+
+El uso de cuatro sensores LDR ubicados en los puntos cardinales permite obtener una estimación de la orientación relativa del satélite respecto a la fuente luminosa. 
+Una mayor iluminación sobre un sensor implica una menor resistencia del LDR correspondiente, generando una variación en la tensión de entrada del comparador y activando la salida asociada.
+
+La detección de eclipse se define cuando los cuatro sensores presentan niveles 
+de iluminación por debajo del umbral configurado. En esta condición, las cuatro salidas individuales permanecen en el mismo estado lógico, lo que permite activar una señal global de eclipse.
+Debe considerarse que los LDR presentan una respuesta no lineal y dependiente 
+de la intensidad luminosa, así como variaciones entre dispositivos. 
+Por este motivo, se incorporan potenciómetros de ajuste que permiten calibrar 
+los umbrales de disparo y compensar diferencias entre sensores.
+
+De este modo, el sistema permite una detección de condiciones de 
+iluminación y orientación básica mediante un esquema analógico simple.
+
+En cuanto al PCB, se agruparon los setpoints para los LDR en un sector junto con el LED indicador de detección de eclipse.
+Los 4 sensores se implementan en 4 PCBs separados con conectores para las señales hacia el main board
+
+\begin{minipage}{0.49\textwidth}
+\begin{figure}[H]
+  \includegraphics[max width=0.9\linewidth]{graphics/2.4.pcb.png}
+  \caption{Selectores e indicador de eclipse en el PCB}%
+  \label{fig:control eclipse}
+\end{figure}    
+\end{minipage}
+\begin{minipage}{0.49\textwidth}
+\begin{figure}[H]
+  \includegraphics[max width=0.9\linewidth]{graphics/2.5.pcb_sensores.png}
+  \caption{Sensores exteriores de luz}%
+  \label{fig:sensores exteriores}
+\end{figure}
+\end{minipage}
