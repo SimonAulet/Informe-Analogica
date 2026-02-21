@@ -29,24 +29,24 @@ Para ello decidimos transformar una señal sinudoidal en una de pulso cuadrado m
 \subsubsection*{Oscilador}
 Ecuación que rige el funcionamiento de un oscilador:
 \\$A_{f} = \frac{V_o}{V_i} = \frac{A}{1 - A\beta}$
-\\A diferencia de un feedback convencional con entrada de referencia y salida, el oscilador se caracteriza por no poseer entrada es decir, tenemos un bloque de ganancia A con una salida $V_{0}$ realimentada mediante un bloque de ganancia de $\beta$ hacia el bloque A directamentel, sin pasar por ningun sumador entre medio. 
-\\Esta caracterizacion hace que la ecuacion de ganancia de feedback necesite a $A\beta =1$ para hacer la ganancia infinita y entrar en el bucle de osclación. Entonces para que la placa cumpla con este requisito de un sencillo despeje tenemos que que la ganancia de feedback expresada con Laplace queda en: 
+\\A diferencia de un feedback convencional con entrada de referencia y salida, el oscilador se caracteriza por no poseer entrada es decir, tenemos un bloque de ganancia A con una salida $V_{0}$ realimentada mediante un bloque de ganancia de $\beta$ hacia el bloque A directamentel, sin pasar por ningun sumador entre medio.
+\\Esta caracterizacion hace que la ecuacion de ganancia de feedback necesite a $A\beta =1$ para hacer la ganancia infinita y entrar en el bucle de osclación. Entonces para que la placa cumpla con este requisito de un sencillo despeje tenemos que que la ganancia de feedback expresada con Laplace queda en:
 \\$A(s) = \frac{V_o(s)}{V_f(s)} = 1 + \frac{R_F}{R_1}$
 
 R1 y Rf están asociadas a la parte de realimentación negativa del amplificador. \\
  $(1 + \frac{R_F}{R_1}) \frac{RCs}{R^2 C^2 s^2 + 3RCs + 1} = 1$\\
 si sustituimos jw por s en la ecuación obtenemos que:\\
  $(1 + \frac{R_F}{R_1}) \frac{RC(jw))}{R^2 C^2 (jw))^2 + 3RC(jw) + 1} = 1$\\
-  
+
   Luego de despejar de la parte imaginaria w, quedamos en los siguientes valores:
  $1+\frac{Rf}{R1}=3$\\
  donde necesariamente nos queda que $\frac{Rf}{R1}=2$\\
  Lo cual para la práctica impone ésta condición de frontera para garantizar la estabilidad del oscilador, es decir que no diverga ni corverga la onda en ningun periodo de operacion. Por recomendación del profesor la resistencia de Rf fue implementada por preset para poder dar ese ajuste fino que en calculos no se puede manejar a causa de las perturbaciones externas.
- 
+
 \begin{figure}[H]
   \includegraphics[max width=0.8\linewidth]{graphics/wien.jpg}
   \caption{Circuito oscilador sinusoidal}%
-  \label{fig:plot-histeresis}
+  \label{fig:oscilador sinusoidal}
 \end{figure}
 
 \subsubsection*{Comparador}
@@ -69,17 +69,14 @@ Seteamos los valores de resistencias y capacitivos en la parte de feedback a un 
 
 \subsection*{Análisis del control PWM}
 
-El servomotor utilizado requiere una señal PWM con frecuencia cercana a 50\,Hz 
+El servomotor utilizado requiere una señal PWM con frecuencia cercana a 50\,Hz
 (período aproximado de 20\,ms). Dentro de cada período, el ancho de pulso determina la posición angular del eje, siendo típicamente 1\,ms el extremo mínimo y 2\,ms el máximo (0° a 180°).
 
 La señal sinusoidal generada por el oscilador Wien es convertida en una señal cuadrada mediante un comparador. La tensión de referencia aplicada al comparador determina el punto de cruce con la señal senoidal y, por lo tanto, el ancho del pulso generado.
 Al variar dicha referencia mediante un preset, se modifica el tiempo durante el cual la señal permanece en nivel alto dentro de cada período de 20\,ms, permitiendo controlar la posición del servomotor de manera analógica.
 
-Este enfoque permite implementar un control PWM simple sin necesidad de 
+Este enfoque permite implementar un control PWM simple sin necesidad de
 microcontroladores, utilizando solo bloques analógicos.
 
 \subsection*{Problemas y conclusiones}
 En el oscilador Puente Wien la ganancia RF/R1 =2 tenia que ser un valor exacto al principio con un valor teórico exacto no pudimos llegar a la oscilacion como tal que primero nos aparecia una linea continua en el osciloscopio (convergencia rápida) o directamente no aparecía nada (divergencia rápida). La recomendación del profesor de colocar el preset fue de gran utilidad para visualizar el punto justo de oscilación en pantalla a medida que ibamos girando la perilla.
-
-
-

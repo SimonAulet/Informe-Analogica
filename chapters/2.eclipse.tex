@@ -10,7 +10,7 @@ Determinar la orientación del satélite y el evento de un eclipse mediante la l
 Siendo un circuito muy simple, se realiza unicamente una simulación en la cual se hace variar una resistencia (simulando el LDR) cuyo valor depende de una fuente de voltaje $R = V(VR)\cdot 1M\Omega$. El circuito se muestra a continuación
 
 \begin{figure}[H]
-  \includegraphics[max width=0.9\linewidth]{graphics/2.1.circuit.jpeg}
+  \includegraphics[max width=0.9\linewidth]{graphics/2.1.circuit.png}
   \caption{Simulación del LDR}%
   \label{fig:simulacion LDR}
 \end{figure}
@@ -31,17 +31,17 @@ Para el esquemático, se usa el mismo circuito comparador 4 veces. Notese que se
 
 \subsection*{Consideraciones de funcionamiento}
 
-El uso de cuatro sensores LDR ubicados en los puntos cardinales permite obtener una estimación de la orientación relativa del satélite respecto a la fuente luminosa. 
+El uso de cuatro sensores LDR ubicados en los puntos cardinales permite obtener una estimación de la orientación relativa del satélite respecto a la fuente luminosa.
 Una mayor iluminación sobre un sensor implica una menor resistencia del LDR correspondiente, generando una variación en la tensión de entrada del comparador y activando la salida asociada.
 
-La detección de eclipse se define cuando los cuatro sensores presentan niveles 
+La detección de eclipse se define cuando los cuatro sensores presentan niveles
 de iluminación por debajo del umbral configurado. En esta condición, las cuatro salidas individuales permanecen en el mismo estado lógico, lo que permite activar una señal global de eclipse.
-Debe considerarse que los LDR presentan una respuesta no lineal y dependiente 
-de la intensidad luminosa, así como variaciones entre dispositivos. 
-Por este motivo, se incorporan potenciómetros de ajuste que permiten calibrar 
+Debe considerarse que los LDR presentan una respuesta no lineal y dependiente
+de la intensidad luminosa, así como variaciones entre dispositivos.
+Por este motivo, se incorporan potenciómetros de ajuste que permiten calibrar
 los umbrales de disparo y compensar diferencias entre sensores.
 
-De este modo, el sistema permite una detección de condiciones de 
+De este modo, el sistema permite una detección de condiciones de
 iluminación y orientación básica mediante un esquema analógico simple.
 
 En cuanto al PCB, se agruparon los setpoints para los LDR en un sector junto con el LED indicador de detección de eclipse.
@@ -52,7 +52,7 @@ Los 4 sensores se implementan en 4 PCBs separados con conectores para las señal
   \includegraphics[max width=0.9\linewidth]{graphics/2.4.pcb.png}
   \caption{Selectores e indicador de eclipse en el PCB}%
   \label{fig:control eclipse}
-\end{figure}    
+\end{figure}
 \end{minipage}
 \begin{minipage}{0.49\textwidth}
 \begin{figure}[H]

@@ -1,7 +1,7 @@
 \section{Filtro Activo}
 
 \subsection*{Objetivo}
-Diseñar, construir y validar experimentalmente un filtro activo pasabajos de segundo orden utilizando un amplificador operacional, con el objetivo de atenuar ruido de alta frecuencia en señales provenientes de sensores satelitales (temperatura, iluminación y corriente). 
+Diseñar, construir y validar experimentalmente un filtro activo pasabajos de segundo orden utilizando un amplificador operacional, con el objetivo de atenuar ruido de alta frecuencia en señales provenientes de sensores satelitales (temperatura, iluminación y corriente).
 Se comparó la frecuencia de corte teórica con la medida en el experimento y se analizó el impacto en la calidad de la señal.
 
 \subsection*{Implementacion}
@@ -79,13 +79,13 @@ H(s)= \frac{1.01}{2.534 \times 10^{-6}s^{2} + 0.001368s + 1}
 \\
 Estimación de parámetros:\\
 \[
- R_{1}=mR 
+ R_{1}=mR
  \]
  \[
-  R_{2}=\frac{R}{m} 
+  R_{2}=\frac{R}{m}
  \]
  \[
- C_{1}=nC 
+ C_{1}=nC
   \]
   \[
  C_{2}=C/n
@@ -128,7 +128,7 @@ ct.bode_plot(H,dB=True)
 
 plt.show()
     \end{lstlisting}\\
-    
+
 \begin{figure}[H]
   \includegraphics[max width=1\linewidth]{graphics/bodeFilter.png}
   \caption{Bode filtro activo}%
@@ -162,7 +162,7 @@ Empleamos el osciloscopio para analizar las componentes frecuenciales de la señ
   \caption{Modulación AM 2}%
   \label{fig:Modulación AM 2}
 \end{figure}
-Esta segunda figura es una prueba con una entrada modulada a una frecuencia un poco mas baja.\\ 
+Esta segunda figura es una prueba con una entrada modulada a una frecuencia un poco mas baja.\\
 
 \subsubsection*{Desfasaje}
 Ingresamos al sistema con una señal sin modular casi a la frecuencia de corte para visualizar la atenuacion en la magnitud y el cambio de fase correspondiente.
@@ -171,6 +171,3 @@ Ingresamos al sistema con una señal sin modular casi a la frecuencia de corte p
   \caption{Desfasaje}%
   \label{fig:desfasaje}
 \end{figure}
-
-
-
