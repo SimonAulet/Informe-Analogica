@@ -76,8 +76,8 @@ A continuación, realizamos la simulación de un script en python con la librer�
 \[
 H(s)= \frac{1.01}{2.534 \times 10^{-6}s^{2} + 0.001368s + 1}
 \]
-\\
-Estimación de parámetros:\\
+
+Estimación de parámetros:
 \[
  R_{1}=mR
  \]
@@ -91,8 +91,8 @@ Estimación de parámetros:\\
  C_{2}=C/n
   \]
  \[
- w_{0}=2*\pi*f_{0}
-  \]
+ w_{0}=2\cdot\pi\cdot f_{0}
+\]
   Investigando al respecto, decidimos que lo más conveniente era definir una única R y una única C para asi poder despejar una única frecuencia de corte. Para poder completar los valores de los esquemáticos escalamos las resistencias y capacitores por las constantes 'm' y 'n' respectivamente.\\
   Probamos valores de resistencias y capacitores que tengan sentido con los materiales a disposición, y, para la magnitud unitaria del Bode, forzamos a que la ganancia en la función transferencia sea 1.01. Dicha ganancia fue obtenida del mismo esquemático en función a las ressitencias:\\
    \[
@@ -136,7 +136,7 @@ plt.show()
 \end{figure}
 De la simulación obtuvimos el Bode en fase y  en magnitud, de los cuales podemos ver que se cumple con el criterio de corte a 200rad\/s  y además se aprecia que a una  superior a 100 rad/s el filtro desfasará nuestra señal de salida respecto a la de entrada.
 \subsection*{Pruebas de laboratorio}
-Sometimos al filtro a diferentes entradas para poder validar y corroborar su comportamiento descrito por los diagramas de Bode.\\
+Sometimos al filtro a diferentes entradas para poder validar y corroborar su comportamiento descrito por los diagramas de Bode.
 
 
 
@@ -162,7 +162,7 @@ Empleamos el osciloscopio para analizar las componentes frecuenciales de la señ
   \caption{Modulación AM 2}%
   \label{fig:Modulación AM 2}
 \end{figure}
-Esta segunda figura es una prueba con una entrada modulada a una frecuencia un poco mas baja.\\
+Esta segunda figura es una prueba con una entrada modulada a una frecuencia un poco mas baja.
 
 \subsubsection*{Desfasaje}
 Ingresamos al sistema con una señal sin modular casi a la frecuencia de corte para visualizar la atenuacion en la magnitud y el cambio de fase correspondiente.

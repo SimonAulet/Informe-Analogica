@@ -5,7 +5,7 @@
 \ProcessOptions\relax
 \LoadClass[12pt,a4paper]{article}
 
-\RequirePackage[utf8]{inputenc}
+
 \RequirePackage{anyfontsize,amsmath,amssymb}
 \RequirePackage[T1]{fontenc}
 
