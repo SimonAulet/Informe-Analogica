@@ -5,9 +5,9 @@
 \ProcessOptions\relax
 \LoadClass[12pt,a4paper]{article}
 
-\RequirePackage[utf8]{vntex,inputenc}
+\RequirePackage[utf8]{inputenc}
 \RequirePackage{anyfontsize,amsmath,amssymb}
-\RequirePackage[T5]{fontenc}
+\RequirePackage[T1]{fontenc}
 
 \RequirePackage{geometry,graphicx,indentfirst,setspace}
 \RequirePackage{booktabs}
@@ -16,8 +16,7 @@
 \RequirePackage{fancyhdr,hyperref}
 \RequirePackage[super,square,sort]{natbib}
 
-% Change to '[english,vietnamese]' to use Vietnamese labels
-\RequirePackage[english]{babel}
+\RequirePackage[english, spanish]{babel}
 
 % Custom commands
 \newcommand{\Month}{

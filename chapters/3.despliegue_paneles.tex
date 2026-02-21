@@ -8,7 +8,8 @@ El despliegue es realizado por un servomotor, donde su debido control nos garant
 El sistema de despliegue se conforma de tres etapas, donde la primera tal como lo dice la grafica es de oscilación, la segunda de activación y la última es la física.
 \begin{figure}[ht]
     \centering
-    \begin{tikzpicture}[auto, node distance=1.5cm, >=latex']
+    \shorthandoff{>}\shorthandoff{<}
+    \begin{tikzpicture}[auto, node distance=1.5cm]
         % 1. Definición de los Bloques (Nodos)
         \node [input, name=input] {};
         \node [block, right=of input] (oscilador) {Oscilador Wien};
@@ -17,11 +18,12 @@ El sistema de despliegue se conforma de tres etapas, donde la primera tal como l
         \node [output, right=of servomotor] (output) {};
 
         % 2. Conexión de los bloques con flechas
-        \draw [->] (input) -- node {V DC} (oscilador);
-        \draw [->] (oscilador) -- node {Seno} (comparador);
-        \draw [->] (comparador) -- node {PWM} (servomotor);
-        \draw [->] (servomotor) -- node {Posición} (output);
+        \draw [-latex] (input) -- node {V DC} (oscilador);
+        \draw [-latex] (oscilador) -- node {Seno} (comparador);
+        \draw [-latex] (comparador) -- node {PWM} (servomotor);
+        \draw [-latex] (servomotor) -- node {Posición} (output);
     \end{tikzpicture}
+    \shorthandon{>}\shorthandon{<}
     \caption{Diagrama en bloques del despliegue.}
 \end{figure}
 
