@@ -1,5 +1,5 @@
 % 'draft' mode can be used to speed up compilation
-\documentclass[twoside,final]{Phenikaa-report}
+\documentclass[twoside,final]{unrn-report}
 \usepackage{codespace}
 
 % Draft watermark
@@ -26,7 +26,7 @@
 \usepackage[nameinlink]{cleveref}
 
 % FOR DEMONSTRATION PURPOSES, REMOVE IN PRODUCTION
-\usepackage{mwe}
+%\usepackage{mwe}
 
 % Sub-preambles
 % https://github.com/MartinScharrer/standalone
@@ -37,24 +37,13 @@
 \title{Control analogico satelital}
 \advisor{& Juan Pablo Adriach&}
 \stuname{%
-  & Simón Aulet &  \\
+  & Simón Pedro Aulet &  \\
   & Juan Nicolás Roccasalvo & \\
   & Nuria Belén Paredes &  \\
 }
 
-% Allow page breaks inside align* environment
-%\allowdisplaybreaks{}
-
-% Makes a lot of things blue, avoid at all costs
-%\everymath{\color{blue}}
-
 % Set depth of numbering for counters
 \AtBeginDocument{\counterwithin{lstlisting}{section}}
-
-% Rename some sections
-%\AtBeginDocument{\renewcommand*{\contentsname}{Contents}}
-%\AtBeginDocument{\renewcommand*{\refname}{References}}
-%\AtBeginDocument{\renewcommand*{\bibname}{References}}
 
 % Custom commands
 %\newcommand*\mean[1]{\bar{#1}}
@@ -73,32 +62,15 @@
 %\AtBeginDocument{\renewcommand*{\refname}{References}}
 %\AtBeginDocument{\renewcommand*{\bibname}{References}}
 
-% Custom commands
-%\newcommand*\mean[1]{\bar{#1}}
 \AtBeginDocument{\renewcommand{\contentsname}{Tabla de contenidos}}
 \AtBeginDocument{\renewcommand{\listfigurename}{Indice de figuras}}
 \AtBeginDocument{\renewcommand{\listtablename}{Indice de Tablas }}
-\AtBeginDocument{\renewcommand{\tablename}{Bảng}}
-\AtBeginDocument{\renewcommand{\figurename}{Hình}}
-\AtBeginDocument{\renewcommand{\refname}{Các nguồn tài liệu than khảo}}
+\AtBeginDocument{\renewcommand{\tablename}{Tabla}}
+\AtBeginDocument{\renewcommand{\figurename}{Figura}}
+\AtBeginDocument{\renewcommand{\refname}{Referencia}}
 
 \begin{document}
 \coverpage%
-
-%\section*{Member list \& Workload}
-%\newcounter{memberrowno}
-%\setcounter{memberrowno}{0}
-%\begin{center}
-%  \begin{tabular}{>{\stepcounter{memberrowno}\thememberrowno}llcc}
-%    \toprule
-%    \multicolumn{1}{c}{\textbf{No.}} & \textbf{Full name} & \textbf{Student ID} & \textbf{Contribution} \\
-%    \midrule
-%                                     & h                  & xxxxxxx             & 100\%                       \\
-%                                     & h                  & xxxxxxx             & 100\%                       \\
-%    \bottomrule
-%  \end{tabular}
-%\end{center}
-%\clearpage
 
 \tableofcontents
 \listoffigures
@@ -117,10 +89,5 @@
 \input{chapters/6.filtro}
 \input{chapters/7.pcb}
 \input{chapters/8.conclusion}
-
-
-\bibliographystyle{plain}
-\bibliography{refs/example.bib}
-\nocite{*}
 
 \end{document}
