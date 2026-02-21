@@ -51,7 +51,7 @@ Para elegir los valores, se simula el sistema de ecuaciónes en Python
 
 
 \begin{minipage}{0.5\textwidth}
-    \begin{figure}[H]
+\begin{figure}[H]
   \includegraphics[max width=0.9\linewidth]{graphics/1.6.hysteresis_calculations.png}
   \caption{Ploteo de límites para histéresis}%
   \label{fig:plot-histeresis}
@@ -109,7 +109,7 @@ Finalmente, se incluye una prueba de la amplitud de la histéresis para verifica
 Se usan marcadores para determinar el ancho de la histéresis $(H)$. Ese valor se resalta en azúl en la ventana de marcadores. Se puede apreciar que da $425mV$, totalmente en línea con lo simulado en Python
 
 \subsection*{Análisis y consideraciones de diseño}
-El ancho de histéresis obtenido fue aproximadamente $H \approx 430\,mV$ en la entrada del comparador. 
+El ancho de histéresis obtenido fue aproximadamente $H \approx 430\,mV$ en la entrada del comparador.
 Dado que el sensor LM35 posee una sensibilidad de $10\,mV/^\circ C$ y la etapa amplificadora tiene una ganancia de 5, esto implica que el ancho real de histéresis en temperatura es:
 
 \[
@@ -118,7 +118,7 @@ Dado que el sensor LM35 posee una sensibilidad de $10\,mV/^\circ C$ y la etapa a
 
 Este valor resulta adecuado para evitar conmutaciones erráticas debidas a pequeñas fluctuaciones o ruido cercano al umbral.
 
-Por otro lado, en la implementación práctica deben considerarse tolerancias de resistencias y no idealidades del LM358, como tensión de saturación no perfectamente rail-to-rail y pequeño offset de entrada. 
+Por otro lado, en la implementación práctica deben considerarse tolerancias de resistencias y no idealidades del LM358, como tensión de saturación no perfectamente rail-to-rail y pequeño offset de entrada.
 Estas variaciones pueden generar leves diferencias respecto a los valores teóricos, aunque no afectan demasiado el funcionamiento general del sistema.
 
 En conjunto, el diseño presenta un comportamiento coherente con el análisis teórico, la simulación y la práctica experimental.
@@ -150,7 +150,7 @@ En la figura se muestra el sector del PCB donde se ubican los potenciómetros pa
 
 \subsection*{Evaluación de la etapa de control térmico}
 
-La etapa de control térmico permitió validar el funcionamiento del sistema desde el sensor hasta la señal de salida. 
+La etapa de control térmico permitió validar el funcionamiento del sistema desde el sensor hasta la señal de salida.
 El análisis teórico de los umbrales y del ancho de histéresis mostró coherencia con las simulaciones realizadas, y el armado del modelo confirmó un comportamiento estable del comparador ante variaciones próximas al punto de disparo.
 
 La incorporación de histéresis resultó fundamental para evitar oscilaciones no deseadas, garantizando una conmutación limpia y predecible en condiciones cercanas al umbral.

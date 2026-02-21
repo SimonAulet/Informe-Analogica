@@ -1,0 +1,54 @@
+\section{Implementación en PCB}
+
+Para la implementación en el PCB se usa KiCad
+
+Se trata de dos proyectos distintos:
+\begin{itemize}
+  \item \textbf{Main board:} PCB principal con 6 capas. Se priorizan componentes SMD excepto en conectores con el exterior y Relays por necesitar conexiónes más robustas.
+  \item \textbf{Sensores externos:} Los sensores distribuídos en el satélite se comunican con el main board mediante cables. Entonces cada sensor se monta en un PCB simple con orificios para atornillar en su destino final. Las señales de esos sensores y actuadores se llevan mediante cables al PCB principal.
+\end{itemize}
+
+\subsection{Diseño de esquemáticos}
+
+Se optó por hacer un sheet principal con bloques, cada uno de los cuales representa un subsistema. En el esquemático principal se pueden ver las señales entrando y saliendo de cada bloque.
+De esta manera, se consigue un sistema entendible y mantenible.
+
+\begin{figure}[H]
+  \includegraphics[max width=0.99\linewidth]{graphics/0.root.pdf}
+  \caption{Diagrama de bloques del PCB}%
+  \label{fig:PCB block-diagram}
+\end{figure}
+
+Para los esquemáticos se copian los diseños validados en simulaciónes o protoboards con ligeras diferencias de implementación. Por ejemplo; el filtro se armó en protoboard una sola vez pero en la implementación se usan 4, uno para cada señal de LDR.
+
+\subsubsection{Selección de componentes}
+Principalmente se eligió Texas Instruments en los componentes, por ser marca usada en los laboratorios y ser fiable.
+
+\begin{itemize}
+  \item \textbf{LM35:} Como sensor de temperatura se elige el LM35 de Texas instruments. El encapsulado seleccionado es TO-220, el cual se puede atornillar a las baterías para la medición de baja temperatura
+  \item \textbf{LM358B:} Amplificador operacional principal. También de TI, versión SMD para montaje compacto en el main board. Se colocan capacitores de $0.1\mu \text{F}$ como indica el datasheet, pegados a la alimentación
+  \item \textbf{Mosfet:} En este caso se optó por el CSD17577Q5A de Texas Instruments por ser el más pequeño que cumple con los requerimientos. Esta elección trajo problemas ya que la separación de los pines generó conflictos con el ancho de pista definido para las señales que maneja
+  \item \textbf{RT314009:} Este componente se eligió como Relay para las baterías por estar disponible en la biblioteca de Kicad y manejar altos amperajes. Texas instruments no tenía alternativas
+  \item \textbf{Componentes genéricos} Resistores, ldr, capacitores, etc. se eligen basandose en disponibilidad de componentes genéricos disponibles en biblioteca de Kicad.
+\end{itemize}
+
+\subsubsection{Elección de clases para las señales}
+A conciencia de que no todas las señales se manejan igual, se eligen distintas clases de señales:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|p{8cm}|} % Barras verticales y ancho fijo para la última columna
+\hline
+\textbf{Prefijo} & \textbf{Significado} & \textbf{Explicación} \\
+\hline
+A\_      & Analógicas          & Sensibles a ruido, se intenta reducir los saltos entre capas \\
+F\_      & Feedback            & Críticas, se intenta minimizar su longitud \\
+L\_      & LEDs del main board & Poco importantes / sensibles, solo indicadoras \\
+C\_      & Control             & Generalmente on/off o set\_point \\
+S\_      & Power signal        & Señal de potencia \\
+$\pm$9VA     & Power clean         & Alimentación de amplificadores \\
+\hline
+\end{tabular}
+\caption{Descripción de los prefijos de señal.}
+\label{tab:prefijos}
+\end{table}
