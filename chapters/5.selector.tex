@@ -1,6 +1,6 @@
 \section{Sistema de selección y detección de orientación}
 \subsection{Latch de selección}
-Para seleccionar entre dos estados de funcionamiento (plegado y desplegado) implementamos un latch con transistores NPN acoplados cruzadamente. 
+Para seleccionar entre dos estados de funcionamiento (plegado y desplegado) implementamos un latch con transistores NPN acoplados cruzadamente.
 De esta forma, el circuito constitute un bioestable tipo SR, que es capaz de mantener el estado seleccionado hasta recibir un nuevo pulso de conmutación.
 
 La conmutación se realiza mediante pulsos de tensión aplicados a cada una de las entradas. En la simulación, esos pulsos fueron modelados mediante fuentes de voltaje tipo PULSE.
@@ -18,30 +18,3 @@ Con la simulación temporal verificamos el correcto funcionamiento del biestable
   \caption{Esquematico completo}%
   \label{fig:esquematico selector fuente}
 \end{figure}
-
-
-\subsection{Sensor de orientación grosera}
-Para determinar la orientación del sistema respecto a la luz solar usamos un detector basado en sensores LDR.
-
-Dispusimos cuatro LDR formando los vértices de un cuadrado, aunque debido a su comportamiento idéntico simulamos solo uno de los canales.
-
-El principio de funcionamiento se basa en utilizar la variación resistiva del LDR en función de la iluminación incidente. En la simulación esta variación fue modelada asignando al LDR una resistencia dependiente de tensión:
-
-\[
-R_{LDR} = V(VR) \cdot 10000
-\]
-
-donde la fuente auxiliar $V_3$ permite simular un cambio suave en la iluminación.
-
-El circuito usa un comparador para determinar si el nivel de iluminación supera un umbral ajustable mediante un preset modelado por las resistencias $RPOT1$ y $RPOT2$.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.9\linewidth]{graphics/6.schematic.pdf}
-  \caption{Circuito del sensor de orientación basado en LDR}
-  \label{fig:sensor_orientacion}
-\end{figure}
-
-El análisis temporal muestra la variación progresiva del voltaje en el LDR y la correspondiente conmutación en la salida del comparador.
-
-Debido a que la variación lumínica ocurre de manera lenta, no implementamos histéresis en el comparador, ya que no se observaron oscilaciones en la zona de umbral.

@@ -4,10 +4,26 @@
 Determinar la orientación del satélite y el evento de un eclipse mediante la luz recibida en sensores luminicos, activando salidas de control correspondientes
 
 \subsection*{Implementación}
-4 sensores LDR se ubican en los puntos cardinales del satélite. Cada sensor es un mini PCB individual que se conecta por cables al board principal. Potenciómetros en este board permiten calibrar la sensiblidad de luz para activar la salida.
+Para determinar la orientación del sistema respecto a la luz solar usamos un detector basado en sensores LDR.
+
+Dispusimos cuatro LDR formando los vértices de un cuadrado, aunque debido a su comportamiento idéntico simulamos solo uno de los canales.
+
+El principio de funcionamiento se basa en utilizar la variación resistiva del LDR en función de la iluminación incidente. En la simulación esta variación fue modelada asignando al LDR una resistencia dependiente de tensión:
+
+\[
+R_{LDR} = V(VR) \cdot 10000
+\]
+
+donde la fuente auxiliar $V_3$ permite simular un cambio suave en la iluminación.
+
+El circuito usa un comparador para determinar si el nivel de iluminación supera un umbral ajustable mediante un preset modelado por las resistencias $RPOT1$ y $RPOT2$.
 
 \subsubsection*{Simulación}
 Siendo un circuito muy simple, se realiza unicamente una simulación en la cual se hace variar una resistencia (simulando el LDR) cuyo valor depende de una fuente de voltaje $R = V(VR)\cdot 1M\Omega$. El circuito se muestra a continuación
+
+El análisis temporal muestra la variación progresiva del voltaje en el LDR y la correspondiente conmutación en la salida del comparador.
+
+Debido a que la variación lumínica ocurre de manera lenta, no implementamos histéresis en el comparador, ya que no se observaron oscilaciones en la zona de umbral.
 
 \begin{figure}[H]
   \includegraphics[max width=0.9\linewidth]{graphics/2.1.circuit.png}
