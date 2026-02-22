@@ -45,43 +45,52 @@ $\displaystyle A(s) = \frac{V_o(s)}{V_f(s)} = 1 + \frac{R_F}{R_1}$
 
 R1 y Rf están asociadas a la parte de realimentación negativa del amplificador.
 
-$$
-\left(1 + \frac{R_F}{R_1}\right) \cdot \frac{RCs}{R^2 C^2 s^2 + 3RCs + 1} = 1
-$$
+R1 y Rf están asociadas a la parte de realimentación negativa del amplificador. 
+\[
+  (1 + \frac{R_F}{R_1}) \frac{RCs}{R^2 C^2 s^2 + 3RCs + 1} = 1
+\]
 
-si sustituimos $j\omega$ por $s$ en la ecuación obtenemos que:
-$$
-\left(1 + \frac{R_F}{R_1}\right) \cdot \frac{RC(j\omega)}{R^2 C^2 (j\omega))^2 + 3RC(j\omega) + 1} = 1
-$$
-
+si sustituimos jw por s en la ecuación obtenemos que:\\
+ \[
+ (1 + \frac{R_F}{R_1}) \frac{RC(jw)}{R^2 C^2 (jw)^2 + 3RC(jw) + 1} = 1
+\]
   Luego de despejar de la parte imaginaria w, quedamos en los siguientes valores:
- $1+\frac{Rf}{R1}=3$
+ $1+\frac{Rf}{R1}=3$\\
  donde necesariamente nos queda que $\frac{Rf}{R1}=2$\\
  Lo cual para la práctica impone ésta condición de frontera para garantizar la estabilidad del oscilador, es decir que no diverga ni corverga la onda en ningun periodo de operacion. Por recomendación del profesor la resistencia de Rf fue implementada por preset para poder dar ese ajuste fino que en calculos no se puede manejar a causa de las perturbaciones externas.
 
 \begin{figure}[H]
   \includegraphics[max width=0.8\linewidth]{graphics/wien.jpg}
-  \caption{Circuito oscilador sinusoidal (Puente Wien)\hfill}%
+  \caption{Circuito oscilador sinusoidal}%
   \label{fig:oscilador sinusoidal}
 \end{figure}
 
-\subsubsection{Comparador}
+\subsubsection*{Comparador}
 \begin{figure}[H]
   \includegraphics[max width=0.8\linewidth]{graphics/comp.png}
-  \caption{Circuito comparador para conversión senoidal a PWM\hfill}
-  \label{fig:circuito oscilador}
+  \caption{Circuito comparador analógico}%
+  \label{fig:esquema de comparación}
 \end{figure}
 El comparador consta de una señal de referencia en la pata inversora que compara constantemente con la tension de la señal sinusoidal inyectada en la pata no inversora, entonces cuando la señal alcanza y supera el voltaje de comparación, la salida permanece en estado alto en toda la fracción de la cresta que hasta que este voltaje es menor a la referencia, entonces obtenemos el pulso cuadrado, que ser repite cada 50Hz, ya que la comparación aparece en éste periodo de 20mS. Modulando el pulso con un preset que ajuste la referencia estamos sobrados para hacer todo el barrido del servomotor ya que el rango de valores de 0 a 180° equivale a 1 a 2mS en la señal.
+\subsubsection*{Comparador: selectora}
 
-\subsection{Pruebas de laboratorio}
+\begin{figure}[H]
+  \includegraphics[max width=0.9\linewidth]{graphics/selectora.png}
+  \caption{Circuito selector con panel indicadorl}%
+  \label{fig:circuito oscilador}
+\end{figure}
+Dentro del comparador tenemos una selectora de apertura o cierre del panel,fue implementada con un latch analógico compuesto de dos transistores bjt.
+
+
+\subsection*{Pruebas de laboratorio}
 \begin{figure}[H]
   \includegraphics[max width=0.9\linewidth]{graphics/osc.png}
-  \caption{Prueba en osciloscopio del oscilador Wien\mbox{}}%
+  \caption{Prueba en osciloscopio}%
   \label{fig:prueba osciloscopio}
 \end{figure}
-Seteamos los valores de resistencias y capacitivos en la parte de feedback a un mismo R y un miscmo C para poder despejar una única frecuencia de oscilacion en este caso la frecuencia de operación es 50Hz para mover el servomotor.
+Seteamos los valores de resistencias y capacitivos en la parte de feedback a un mismo R y un miscmo C para poder despejar una única frecuencia de oscilacion en este caso la frecuencia de operación es 50Hz para mover el servomotor.\\
 
-\subsection{Análisis del control PWM}
+\subsection*{Análisis del control PWM}
 
 El servomotor utilizado requiere una señal PWM con frecuencia cercana a 50\,Hz
 (período aproximado de 20\,ms). Dentro de cada período, el ancho de pulso determina la posición angular del eje, siendo típicamente 1\,ms el extremo mínimo y 2\,ms el máximo (0° a 180°).
