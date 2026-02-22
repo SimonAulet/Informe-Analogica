@@ -1,20 +1,76 @@
-\section{Sistema de selección y detección de orientación}
-\subsection{Latch de selección}
-Para seleccionar entre dos estados de funcionamiento (plegado y desplegado) implementamos un latch con transistores NPN acoplados cruzadamente.
-De esta forma, el circuito constitute un bioestable tipo SR, que es capaz de mantener el estado seleccionado hasta recibir un nuevo pulso de conmutación.
+\section{Sistema de selección de suministro de corriente}
+\subsection{Objetivo}
+Diseñar un sistema que mida dos voltajes separados; el de las baterías y el de los paneles solares y conmute entre una fuente y otra de alimentación
 
-La conmutación se realiza mediante pulsos de tensión aplicados a cada una de las entradas. En la simulación, esos pulsos fueron modelados mediante fuentes de voltaje tipo PULSE.
+\subsection{Implementación}
 
-\begin{enumerate}[start=4,label={\alph*.yeah}]
-  \item First item
-  \item Second item
-  \item[custom] Third item
-\end{enumerate}
+Se asume un regulador de voltaje y controles varios de potencia aparte.
+Este subsistema lo unico que hace es comparar los voltajes y cerrar el circuito que alimenta
+la placa de potencia principal usando baterías o paneles solares. Para tal fin se usarán
+relés cuyas bobinas se alimentarán con mosfets. El uso de relés se considera óptimo en este
+caso por ser extremadamente eficiente con grandes corrientes y tenér relativamente bajas
+conmutaciónes.
 
-Con la simulación temporal verificamos el correcto funcionamiento del biestable. En ella se observa la conmutación estable entre ambos estados sin oscilaciones indeseadas.
+\subsubsection{Simulaciónes}
+\begin{figure}[H]
+  \includegraphics[max width=0.99\linewidth]{graphics/5.1.circuit.png}
+  \caption{Circuito completo}%
+  \label{fig:circuito en LTSpice}
+\end{figure}
+Para la simulación se reemplaza la bobina del relé con una resistencia.
+Voltajes variables simulan las fluctuaciónes (discretas en la simulación)
+de las fuentes.
+
+El bloque inversor hace que cuando la salida del comparador está en alto,
+un mosfet se activa y cuando está en bajo, lo haga el otro.
 
 \begin{figure}[H]
-  \includegraphics[max width=0.9\linewidth]{graphics/4.schematic.pdf}
-  \caption{Esquematico completo}%
-  \label{fig:esquematico selector fuente}
+  \includegraphics[max width=0.99\linewidth]{graphics/5.3.switching(annotated).png}
+  \caption{Salida de la simulación}%
+  \label{fig:Salida de la simulación}
 \end{figure}
+
+En la salida se puede apreciar cómo se ejecuta el switching entre las fuentes. Como
+ el comparador tiene histéresis, solo se modifican las salidas cuando la diferencia
+ de voltaje es suficiente
+
+\subsubsection{Implementación en PCB}
+
+\paragraph{Esquemático}
+
+ \begin{figure}[H]
+   \includegraphics[max width=0.99\linewidth]{graphics/5.schematic.pdf}
+   \caption{Esquemático del PCB}%
+   \label{fig:Esquemático}
+ \end{figure}
+
+El esquemático es igual a la simulación, con la excepción que las resistencias esta vez son los
+relés. Se coloca el flyback diode correspondiente.
+
+\paragraph{Estrategia de ruteo}
+
+Al manejar tanta corriente, en lugar de usar pistas se usan áreas enteras del PCB con cobre. Mientras que la señal
+de GND está en su plano correspondiente (en In1.Cu) de gran área, las dos señales de batería y solar, se colocan en
+B.Cu, resolviendo la ventilación.
+
+En las siguientes imágenes se puede ver tanto el plano del PCB como una captura del renderizado
+3D para tener una idea de la dimensión del área de conducción.
+\begin{minipage}{0.49\linewidth}
+\begin{figure}[H]
+  \includegraphics[max width=0.99\linewidth]{graphics/5.4.pcb_zones(annotated).png}
+  \caption{Plano anotado de áreas de conducción y GND}%
+  \label{fig:Plano pistas}
+\end{figure}
+\end{minipage}
+\begin{minipage}{0.49\linewidth}
+\begin{figure}[H]
+  \includegraphics[max width=0.99\linewidth]{graphics/5.5.pcb_zones.png}
+  \caption{Renderizado 3D de las dos áreas de conducción}%
+  \label{fig:Render 3D}
+\end{figure}
+\end{minipage}
+
+Los relés se colocaron lo más cerca posible de los conectores y lo más alejados posibles del resto de los
+circuitos. Es evidente, sin embargo, que no se trata de una buena práctica incluir en este board relés
+de tanta corriente. Una mejor práctica sería dejar unicamente los mosfets acá y colocar los relés en el
+PCB correspondiente a la gestión de energía o en uno a parte.
