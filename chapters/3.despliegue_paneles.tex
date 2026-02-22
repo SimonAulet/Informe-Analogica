@@ -1,12 +1,13 @@
 \hbadness=10000pt  % Ignora Underfull hbox
 \hfuzz=10000pt     % Ignora Overfull hbox
 
-
 \section{Despliegue de paneles}
-\subsection*{Objetivo}
+
+\subsection{Objetivo}
 Diseñar un sistema de control para el despliegue automático de paneles solares o antenas.
 Relación con Sistemas Reales: Este circuito representa el mecanismo de despliegue de paneles solares o antenas en satélites, que deben activarse de forma precisa y detenerse automáticamente al alcanzar su posición final.
-\subsection*{Implementación}
+
+\subsection{Implementación}
 
 El despliegue es realizado por un servomotor, donde su debido control nos garantiza la precisión en la activacion, y recorrido final (control PWM).
 El sistema de despliegue se conforma de tres etapas, donde la primera tal como lo dice la grafica es de oscilación, la segunda de activación y la última es la física.
@@ -33,7 +34,7 @@ El sistema de despliegue se conforma de tres etapas, donde la primera tal como l
 
 La idea en esta implementacion es diseñar un controlador analógico para un servomotor, la única manera de lograrlo es mediante el conocido PWM, en otras palabras es hacerle llegar una determidada cantidad de pulsos por segundo para su activacion y modularlos para su control en grados.
 Para ello decidimos transformar una señal sinudoidal en una de pulso cuadrado mediante un amplificador operacional en una configuración de comparador.
-\subsubsection*{Oscilador}
+\subsubsection{Oscilador}
 Ecuación que rige el funcionamiento de un oscilador:
 $$
 A_{f} = \frac{V_o}{V_i} = \frac{A}{1 - A\beta}
@@ -64,7 +65,7 @@ $$
   \label{fig:oscilador sinusoidal}
 \end{figure}
 
-\subsubsection*{Comparador}
+\subsubsection{Comparador}
 \begin{figure}[H]
   \includegraphics[max width=0.8\linewidth]{graphics/comp.png}
   \caption{Circuito comparador para conversión senoidal a PWM\hfill}
@@ -72,9 +73,7 @@ $$
 \end{figure}
 El comparador consta de una señal de referencia en la pata inversora que compara constantemente con la tension de la señal sinusoidal inyectada en la pata no inversora, entonces cuando la señal alcanza y supera el voltaje de comparación, la salida permanece en estado alto en toda la fracción de la cresta que hasta que este voltaje es menor a la referencia, entonces obtenemos el pulso cuadrado, que ser repite cada 50Hz, ya que la comparación aparece en éste periodo de 20mS. Modulando el pulso con un preset que ajuste la referencia estamos sobrados para hacer todo el barrido del servomotor ya que el rango de valores de 0 a 180° equivale a 1 a 2mS en la señal.
 
-
-
-\subsection*{Pruebas de laboratorio}
+\subsection{Pruebas de laboratorio}
 \begin{figure}[H]
   \includegraphics[max width=0.9\linewidth]{graphics/osc.png}
   \caption{Prueba en osciloscopio del oscilador Wien\mbox{}}%
@@ -82,7 +81,7 @@ El comparador consta de una señal de referencia en la pata inversora que compar
 \end{figure}
 Seteamos los valores de resistencias y capacitivos en la parte de feedback a un mismo R y un miscmo C para poder despejar una única frecuencia de oscilacion en este caso la frecuencia de operación es 50Hz para mover el servomotor.
 
-\subsection*{Análisis del control PWM}
+\subsection{Análisis del control PWM}
 
 El servomotor utilizado requiere una señal PWM con frecuencia cercana a 50\,Hz
 (período aproximado de 20\,ms). Dentro de cada período, el ancho de pulso determina la posición angular del eje, siendo típicamente 1\,ms el extremo mínimo y 2\,ms el máximo (0° a 180°).
@@ -93,5 +92,5 @@ Al variar dicha referencia mediante un preset, se modifica el tiempo durante el 
 Este enfoque permite implementar un control PWM simple sin necesidad de
 microcontroladores, utilizando solo bloques analógicos.
 
-\subsection*{Problemas y conclusiones}
+\subsection{Problemas y conclusiones}
 En el oscilador Puente Wien la ganancia RF/R1 =2 tenia que ser un valor exacto al principio con un valor teórico exacto no pudimos llegar a la oscilacion como tal que primero nos aparecia una linea continua en el osciloscopio (convergencia rápida) o directamente no aparecía nada (divergencia rápida). La recomendación del profesor de colocar el preset fue de gran utilidad para visualizar el punto justo de oscilación en pantalla a medida que ibamos girando la perilla.

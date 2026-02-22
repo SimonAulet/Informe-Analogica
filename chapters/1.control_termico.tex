@@ -1,10 +1,13 @@
 \section{Control térmico}
-\section*{Objetivo}
-\section*{Implementación}
+\subsection{Objetivo}
 
-\subsection*{Simulaciónes}
+Obtener mediciónes de temperatura de dos sensores ubicados en el exterior del sistema principal, verificar si pasan un umbral y tomar las medidas necesariasa.
 
-\subsubsection*{Planteo matemático}
+\subsection{Implementación}
+
+\subsubsection*{Simulaciónes}
+
+\paragraph{Planteo matemático}
 Para las simulaciónes se parte de la ecuación de schmitt trigger:
 
 \begin{align*}
@@ -49,7 +52,6 @@ Para elegir los valores, se simula el sistema de ecuaciónes en Python
     )
     \end{lstlisting}
 
-
 \begin{minipage}{0.5\textwidth}
 \begin{figure}[H]
   \includegraphics[max width=0.9\linewidth]{graphics/1.6.hysteresis_calculations.png}
@@ -61,7 +63,7 @@ Para elegir los valores, se simula el sistema de ecuaciónes en Python
     El código nos determina límites de voltaje para encendido y apagado ($V_{in}$) de la salida del amplificador, así como los valores superiores e inferior de voltaje que son $VCC$ y $0$ respectivamente. El ancho resulta en $430mV$
 \end{minipage}
 
-\subsubsection*{Simulación en LTSPice}
+\paragraph{Simulación en LTSPice}
 A partir de esto, se realizan las simulacióne en LTSpice. No del circuito final, si no de los tres casos posibles de funcionamiento del schmitt trigger:
 \begin{itemize}
     \item Histeresis con inversión
@@ -77,7 +79,7 @@ El circuito implementado en LTSpice es el siguiente:
   \label{fig:Implementación en LTSpice de Schmitt Trigger}
 \end{figure}
 Se puede apreciar cómo se hacen 3 circuitos para cada uno de los casos detallados más arriba
-\subsubsection*{Resultados simulación}
+\paragraph{Resultados simulación}
 
 A continuación, se muestran los resultados de cada simulación realizada. Las primeras tres imágenes muestran la forma de onda de los 3 casos medidos.
 
@@ -108,7 +110,7 @@ Finalmente, se incluye una prueba de la amplitud de la histéresis para verifica
 \end{figure}
 Se usan marcadores para determinar el ancho de la histéresis $(H)$. Ese valor se resalta en azúl en la ventana de marcadores. Se puede apreciar que da $425mV$, totalmente en línea con lo simulado en Python
 
-\subsection*{Análisis y consideraciones de diseño}
+\subsubsection{Análisis y consideraciones de diseño}
 El ancho de histéresis obtenido fue aproximadamente $H \approx 430\,mV$ en la entrada del comparador.
 Dado que el sensor LM35 posee una sensibilidad de $10\,mV/^\circ C$ y la etapa amplificadora tiene una ganancia de 5, esto implica que el ancho real de histéresis en temperatura es:
 
@@ -123,7 +125,7 @@ Estas variaciones pueden generar leves diferencias respecto a los valores teóri
 
 En conjunto, el diseño presenta un comportamiento coherente con el análisis teórico, la simulación y la práctica experimental.
 
-\subsection*{Implementación en PCB}
+\subsection{Implementación en PCB}
 \begin{figure}[H]
   \includegraphics[max width=0.99\linewidth]{graphics/1.schematic.pdf}
   \caption{Esquemático}%
@@ -148,7 +150,7 @@ En la figura se muestra el sector del PCB donde se ubican los potenciómetros pa
 \end{figure}
 \end{minipage}
 
-\subsection*{Evaluación de la etapa de control térmico}
+\subsubsection{Evaluación de la etapa de control térmico}
 
 La etapa de control térmico permitió validar el funcionamiento del sistema desde el sensor hasta la señal de salida.
 El análisis teórico de los umbrales y del ancho de histéresis mostró coherencia con las simulaciones realizadas, y el armado del modelo confirmó un comportamiento estable del comparador ante variaciones próximas al punto de disparo.

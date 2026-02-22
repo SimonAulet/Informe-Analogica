@@ -1,10 +1,10 @@
 \section{Filtro Activo}
 
-\subsection*{Objetivo}
+\subsection{Objetivo}
 Diseñar, construir y validar experimentalmente un filtro activo pasabajos de segundo orden utilizando un amplificador operacional, con el objetivo de atenuar ruido de alta frecuencia en señales provenientes de sensores satelitales (temperatura, iluminación y corriente).
 Se comparó la frecuencia de corte teórica con la medida en el experimento y se analizó el impacto en la calidad de la señal.
 
-\subsection*{Implementacion}
+\subsection{Implementacion}
 Se utilizó la topología Sallen-Key, ampliamente utilizada para la implementación de filtros activos (op amp) de segundo orden.
 El orden dos del sistema se debe a que tenemos dos componentes almacenadores de energía (capacitores $C_1$ y $C_2$), lo que introduce dos polos en la función de transferencia.
 La imagen a continuación describe como es la topología en cuestión.
@@ -70,7 +70,7 @@ Por otro lado, la ganancia del amplificador operacional en configuración no inv
 K = 1 + \frac{R_4}{R_3}
 \]
 
-\subsection*{Simulación}
+\subsubsection{Simulación}
 A continuación, realizamos la simulación de un script en python con la librería \texttt{python-control} para poder visualizar el diagrama de Bode en magnitud y fase a partir de la funcion transferencia del circuito:
 
 \[
@@ -135,12 +135,12 @@ plt.show()
   \label{fig:Bode filtro activo}
 \end{figure}
 De la simulación obtuvimos el Bode en fase y  en magnitud, de los cuales podemos ver que se cumple con el criterio de corte a 200rad\/s  y además se aprecia que a una  superior a 100 rad/s el filtro desfasará nuestra señal de salida respecto a la de entrada.
-\subsection*{Pruebas de laboratorio}
+\subsubsection{Pruebas de laboratorio}
 Sometimos al filtro a diferentes entradas para poder validar y corroborar su comportamiento descrito por los diagramas de Bode.
 
 
 
-\subsubsection*{Modulación AM}
+\paragraph{Modulación AM}
 Decidimos probar el filtrado con una senoidal modulada en AM mediante un generador de funciones, dicha portadora contenía altas frecuencias y la envolvente bajas frecuencias para corroborar su debido funcionamiento.
 \begin{figure}[H]
   \includegraphics[max width=0.5\linewidth]{graphics/filter1.png}
@@ -148,7 +148,7 @@ Decidimos probar el filtrado con una senoidal modulada en AM mediante un generad
   \label{fig:Modulación AM 1}
 \end{figure}
 El osciloscopio muestra lo que esperábamos, una señal filtrada(amarillo), un poco desfasada en fase y también atenuada en magnitud, la atenuación corresponde a aproximadamente 7 decibeles que es la transición de la frecuencia de corte.
-\subsubsection*{Armónicos}
+\paragraph{Armónicos}
 Empleamos el osciloscopio para analizar las componentes frecuenciales de la señal periódica en la señal modulada, a modo de verificar que efectivamente introdujimos unas componentes de alta frecuencia.
 
 \begin{minipage}{0.48\linewidth}
@@ -168,7 +168,7 @@ Empleamos el osciloscopio para analizar las componentes frecuenciales de la señ
 
 La segunda figura es una prueba con una entrada modulada a una frecuencia un poco mas baja.
 
-\subsubsection*{Desfasaje}
+\paragraph{Desfasaje}
 Ingresamos al sistema con una señal sin modular casi a la frecuencia de corte para visualizar la atenuacion en la magnitud y el cambio de fase correspondiente.
 \begin{figure}[H]
   \includegraphics[max width=0.5\linewidth]{graphics/check.png}

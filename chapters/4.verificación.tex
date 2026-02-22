@@ -1,9 +1,10 @@
 \section{Verificación despliegue}
-\subsection*{Objetivo}
+
+\subsection{Objetivo}
 
 Hacer un sistema de verificación analógica de despliegue exitoso de paneles solares.
 
-\subsection*{Implementación}
+\subsection{Implementación}
 
 Para verificar el correcto despliegue, se comparan dos señales: La señal de selección
 A\_PANEL\_OPEN / CLOSE\_LATCH\_I con la señal de sensor A\_PANEL\_OPEN / CLOSE\_SENSOR\_I.
@@ -23,7 +24,7 @@ A cotinuación se muestra el esquemático con cada bloque:
   \item\textbf{Panel status logic:} Indicador que informa el estado de los paneles. Cuando el latch seleccióna apertura y el sensor indica que está abierto, sale la señal de panel abierto. Lo mismo para cerrado
 \end{itemize}
 
-\subsubsection*{Simulaciónes}
+\subsubsection{Simulaciónes}
 Se arma el circuito en LTSpice para una  sola señal como se muestra a continuación.
 
 \begin{figure}[H]
@@ -62,7 +63,7 @@ Esta waveform está sincronizada con la anterior (es la misma simulación), con 
   \label{fig:alarm-logic simulation}
 \end{figure}
 
-\subsection*{Principio de funcionamiento}
+\subsection{Principio de funcionamiento}
 Lo que hace este sistema es implementar una verificación temporal de coherencia entre la orden de despliegue y la respuesta física del mecanismo.
 
 Cuando se emite una señal de apertura o cierre, el bloque signal-to-pulse genera un pulso que dispara el temporizador 555 en modo monoestable. A partir de ese momento empieza una ventana temporal durante la cual se espera que el sensor indique la posición alcanzada.
