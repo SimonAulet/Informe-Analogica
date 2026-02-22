@@ -45,18 +45,18 @@ $\displaystyle A(s) = \frac{V_o(s)}{V_f(s)} = 1 + \frac{R_F}{R_1}$
 
 R1 y Rf están asociadas a la parte de realimentación negativa del amplificador.
 
-R1 y Rf están asociadas a la parte de realimentación negativa del amplificador. 
+R1 y Rf están asociadas a la parte de realimentación negativa del amplificador.
 \[
-  (1 + \frac{R_F}{R_1}) \frac{RCs}{R^2 C^2 s^2 + 3RCs + 1} = 1
+  \left(1 + \frac{R_F}{R_1}\right) \frac{RCs}{R^2 C^2 s^2 + 3RCs + 1} = 1
 \]
 
-si sustituimos jw por s en la ecuación obtenemos que:\\
+si sustituimos jw por s en la ecuación obtenemos que:
  \[
  (1 + \frac{R_F}{R_1}) \frac{RC(jw)}{R^2 C^2 (jw)^2 + 3RC(jw) + 1} = 1
 \]
   Luego de despejar de la parte imaginaria w, quedamos en los siguientes valores:
- $1+\frac{Rf}{R1}=3$\\
- donde necesariamente nos queda que $\frac{Rf}{R1}=2$\\
+ $1+\frac{Rf}{R1}=3$
+ donde necesariamente nos queda que $\frac{Rf}{R1}=2$
  Lo cual para la práctica impone ésta condición de frontera para garantizar la estabilidad del oscilador, es decir que no diverga ni corverga la onda en ningun periodo de operacion. Por recomendación del profesor la resistencia de Rf fue implementada por preset para poder dar ese ajuste fino que en calculos no se puede manejar a causa de las perturbaciones externas.
 
 \begin{figure}[H]
@@ -76,7 +76,7 @@ El comparador consta de una señal de referencia en la pata inversora que compar
 
 \begin{figure}[H]
   \includegraphics[max width=0.9\linewidth]{graphics/selectora.png}
-  \caption{Circuito selector con panel indicadorl}%
+  \caption{Circuito selector con panel indicador}%
   \label{fig:circuito oscilador}
 \end{figure}
 Dentro del comparador tenemos una selectora de apertura o cierre del panel,fue implementada con un latch analógico compuesto de dos transistores bjt.
