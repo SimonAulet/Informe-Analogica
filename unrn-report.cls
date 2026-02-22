@@ -159,7 +159,7 @@
 
     \MakeUppercase{\@deptname}
     \vfill
-    \includegraphics[scale=0.15]{graphics/logo.png}
+    \includegraphics[scale=0.8]{graphics/logo.png}
     \vfill
     \bfseries
     \begin{tabular}{c}
